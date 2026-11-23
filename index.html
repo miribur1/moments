@@ -123,9 +123,9 @@
     }
 
     #backupMenuBtn {
-      min-width: 34px;
-      font-size: 1.05rem;
-      padding: 5px 8px;
+      min-width: 36px;
+      font-size: 1.15rem;
+      padding: 5px 9px;
     }
 
     .icon-btn.active {
@@ -267,6 +267,57 @@
       .search-box {
         max-width: 260px;
       }
+    }
+
+    .backup-banner {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 8px 14px;
+      background: #fffbeb;
+      border-bottom: 1px solid #fde68a;
+      color: #92400e;
+      font-size: 0.82rem;
+      flex-shrink: 0;
+    }
+
+    .backup-banner.visible {
+      display: flex;
+    }
+
+    .backup-banner-text {
+      flex: 1;
+      line-height: 1.35;
+    }
+
+    .backup-banner-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .btn-banner-share {
+      background: #f59e0b;
+      color: #ffffff;
+      border: none;
+      border-radius: 7px;
+      padding: 5px 10px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .btn-banner-dismiss {
+      background: transparent;
+      border: none;
+      color: #b45309;
+      font-size: 1rem;
+      cursor: pointer;
+      padding: 4px 6px;
+      line-height: 1;
     }
 
     .table-wrapper {
@@ -655,40 +706,145 @@
     .dialog-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(30, 41, 59, 0.5);
+      background: var(--surface);
       z-index: 10000;
       display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
+      flex-direction: column;
+      height: 100vh;
+      height: 100dvh;
     }
 
     .dialog-backdrop.open {
       display: flex !important;
     }
 
-    .dialog-card {
-      background: var(--surface);
-      border-radius: var(--radius);
-      padding: 20px;
-      max-width: 400px;
-      width: 100%;
-      box-shadow: var(--shadow);
+    .settings-topbar {
       display: flex;
-      flex-direction: column;
-      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px 6px;
+      flex-shrink: 0;
     }
 
-    .dialog-btn {
-      width: 100%;
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      background: var(--surface-alt);
-      font-size: 0.9rem;
-      font-weight: 600;
+    .settings-close-btn {
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 1.5rem;
+      line-height: 1;
+      padding: 6px 10px;
       cursor: pointer;
+    }
+
+    .settings-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 4px 20px 36px;
+      max-width: 640px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .settings-heading {
+      margin: 0 0 8px;
       text-align: center;
+      font-size: 1.65rem;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: -0.4px;
+    }
+
+    .settings-privacy-note {
+      margin: 0 0 28px;
+      text-align: center;
+      font-size: 0.92rem;
+      color: #64748b;
+      line-height: 1.45;
+    }
+
+    .settings-block {
+      margin-bottom: 24px;
+    }
+
+    .settings-block-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 6px;
+      text-align: right;
+    }
+
+    .settings-row-btn {
+      width: 100%;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 15px 4px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      cursor: pointer;
+      text-align: right;
+      font-family: inherit;
+    }
+
+    .settings-row-btn:last-child {
+      border-bottom: none;
+    }
+
+    .settings-row-btn:active {
+      background: #f8fafc;
+    }
+
+    .settings-row-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      min-width: 0;
+    }
+
+    .settings-row-title {
+      font-size: 1.02rem;
+      font-weight: 700;
+      color: #0f172a;
+      line-height: 1.3;
+    }
+
+    .settings-row-sub {
+      font-size: 0.85rem;
+      color: #64748b;
+      line-height: 1.35;
+    }
+
+    .settings-row-icon {
+      width: 24px;
+      height: 24px;
+      color: #1e293b;
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .settings-info-row {
+      width: 100%;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 15px 4px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      text-align: right;
+    }
+
+    .settings-status-msg {
+      margin-top: 10px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: var(--primary);
+      min-height: 1.2em;
     }
   </style>
 </head>
@@ -702,8 +858,7 @@
     </div>
     <div class="header-actions">
       <button type="button" id="toggleColsBtn" class="icon-btn hide-on-wide" onclick="toggleColumns()">⤢ כל העמודות</button>
-      <button type="button" id="exportCsvBtn" class="icon-btn" onclick="exportCSV()">📤 אקסל</button>
-      <button type="button" id="backupMenuBtn" class="icon-btn" onclick="openBackupDialog()" aria-label="תפריט גיבוי">⋮</button>
+      <button type="button" id="backupMenuBtn" class="icon-btn" onclick="openBackupDialog()" aria-label="הגדרות">⚙️</button>
     </div>
   </header>
 
@@ -731,6 +886,14 @@
         <input type="date" id="customDateInput" class="filter-date" style="display:none;" onchange="handleCustomDate(this.value)" />
         <button type="button" id="sortOrderBtn" class="icon-btn" onclick="toggleSort()">⇅ חדש לישן</button>
       </div>
+    </div>
+  </div>
+
+  <div class="backup-banner" id="backupBanner">
+    <span class="backup-banner-text" id="backupBannerText"></span>
+    <div class="backup-banner-actions">
+      <button type="button" class="btn-banner-share" onclick="shareBackupFile()">☁️ גיבוי מהיר</button>
+      <button type="button" class="btn-banner-dismiss" onclick="dismissBackupBanner()" aria-label="דחיית תזכורת">✕</button>
     </div>
   </div>
 
@@ -840,21 +1003,106 @@
   </div>
 </div>
 
-<!-- Backup / Restore Dialog -->
+<!-- Settings Screen -->
 <div class="dialog-backdrop" id="backupDialog">
-  <div class="dialog-card">
-    <h3>גיבוי ושחזור נתונים</h3>
-    <p>כל הרשומות נשמרות באופן פרטי על המכשיר שלכם בלבד. ייבוא מקובץ (JSON או CSV) ממזג רק רשומות חדשות ומונע כפילויות.</p>
-    <button type="button" class="dialog-btn" onclick="downloadJSON()">💾 הורידו קובץ גיבוי (JSON)</button>
-    <button type="button" class="dialog-btn" onclick="document.getElementById('restoreFileInput').click()">📂 יבאו / מזגו מקובץ (JSON / CSV)</button>
-    <button type="button" class="dialog-btn" onclick="forceAppUpdate()">🔄 בדקו עדכון גרסה (רענון)</button>
-    <input type="file" id="restoreFileInput" accept=".json,.csv,text/csv,application/json,text/plain,*/*" style="display:none;" onchange="restoreBackupFile(event)" />
-    <button type="button" class="dialog-btn" onclick="closeBackupDialog()" style="background:transparent;">סגירה</button>
+  <div class="settings-topbar">
+    <button type="button" class="settings-close-btn" onclick="closeBackupDialog()" aria-label="סגירה">✕</button>
+    <span style="width: 36px;"></span>
+  </div>
+
+  <div class="settings-scroll">
+    <h2 class="settings-heading">הגדרות</h2>
+    <p class="settings-privacy-note">הרגעים שלכם נשמרים באופן פרטי במכשיר בלבד.</p>
+
+    <div class="settings-block">
+      <div class="settings-block-title">גיבוי</div>
+
+      <button type="button" class="settings-row-btn" onclick="exportCSV()">
+        <span class="settings-row-content">
+          <span class="settings-row-title">שמירת גיבוי למכשיר</span>
+          <span class="settings-row-sub">שמירת הרגעים בקובץ מקומי</span>
+        </span>
+        <span class="settings-row-icon" aria-hidden="true">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3v12"/>
+            <path d="M7 10l5 5 5-5"/>
+            <path d="M5 20h14"/>
+          </svg>
+        </span>
+      </button>
+
+      <button type="button" class="settings-row-btn" onclick="shareBackupFile()">
+        <span class="settings-row-content">
+          <span class="settings-row-title">שיתוף גיבוי</span>
+          <span class="settings-row-sub" dir="rtl">שיתוף הקובץ ב־Google Drive, ב־WhatsApp ועוד</span>
+        </span>
+        <span class="settings-row-icon" aria-hidden="true">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 15V3"/>
+            <path d="M7 8l5-5 5 5"/>
+            <path d="M20 14v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-5"/>
+          </svg>
+        </span>
+      </button>
+    </div>
+
+    <div class="settings-block">
+      <div class="settings-block-title">ייבוא ושחזור</div>
+
+      <button type="button" class="settings-row-btn" onclick="document.getElementById('restoreFileInput').click()">
+        <span class="settings-row-content">
+          <span class="settings-row-title">טעינת רגעים מקובץ גיבוי</span>
+          <span class="settings-row-sub">הרגעים יתווספו ללא יצירת כפילויות</span>
+        </span>
+        <span class="settings-row-icon" aria-hidden="true">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 7a2 2 0 0 1 2-2h5l2 2h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          </svg>
+        </span>
+      </button>
+      <input type="file" id="restoreFileInput" accept=".csv,text/csv,text/plain,*/*" style="display:none;" onchange="restoreBackupFile(event)" />
+    </div>
+
+    <div class="settings-block">
+      <div class="settings-block-title">אודות</div>
+
+      <div class="settings-info-row">
+        <span class="settings-row-content">
+          <span class="settings-row-title">Moments</span>
+          <span class="settings-row-sub" id="appVersionLabel">גרסה 1.2.0</span>
+        </span>
+        <span class="settings-row-icon" aria-hidden="true">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9"/>
+            <line x1="12" y1="16" x2="12" y2="11"/>
+            <circle cx="12" cy="8" r="0.8" fill="currentColor" stroke="none"/>
+          </svg>
+        </span>
+      </div>
+
+      <button type="button" class="settings-row-btn" onclick="checkAndUpdateVersion()">
+        <span class="settings-row-content">
+          <span class="settings-row-title">עדכון גרסה</span>
+        </span>
+        <span class="settings-row-icon" id="updateSpinIcon" aria-hidden="true">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12a9 9 0 0 0-15.5-6.36L3 8"/>
+            <path d="M3 3v5h5"/>
+            <path d="M3 12a9 9 0 0 0 15.5 6.36L21 16"/>
+            <path d="M21 21v-5h-5"/>
+          </svg>
+        </span>
+      </button>
+
+      <div class="settings-status-msg" id="versionStatusMsg" aria-live="polite"></div>
+    </div>
   </div>
 </div>
 
 <script>
+  const APP_VERSION = '1.2.0';
   const STORAGE_KEY = 'mindfulness_journal_entries_v1';
+  const BACKUP_META_KEY = 'mindfulness_journal_backup_meta_v1';
   const HEBREW_DAYS = ['יום א׳', 'יום ב׳', 'יום ג׳', 'יום ד׳', 'יום ה׳', 'יום ו׳', 'שבת'];
 
   let entries = [];
@@ -874,9 +1122,93 @@
     }
   }
 
-  function saveEntries() {
+  function getBackupMeta() {
+    try {
+      const raw = localStorage.getItem(BACKUP_META_KEY);
+      return raw ? JSON.parse(raw) : { lastBackupAt: 0, unsavedCount: 0, snoozedUntil: 0 };
+    } catch (e) {
+      return { lastBackupAt: 0, unsavedCount: 0, snoozedUntil: 0 };
+    }
+  }
+
+  function saveBackupMeta(meta) {
+    try {
+      localStorage.setItem(BACKUP_META_KEY, JSON.stringify(meta));
+    } catch (e) {}
+  }
+
+  function markBackupCompleted() {
+    saveBackupMeta({
+      lastBackupAt: Date.now(),
+      unsavedCount: 0,
+      snoozedUntil: 0
+    });
+    updateBackupBanner();
+  }
+
+  function dismissBackupBanner() {
+    const meta = getBackupMeta();
+    meta.snoozedUntil = Date.now() + 3 * 24 * 60 * 60 * 1000; // Snooze for 3 days
+    saveBackupMeta(meta);
+    updateBackupBanner();
+  }
+
+  function updateBackupBanner() {
+    const banner = document.getElementById('backupBanner');
+    const textEl = document.getElementById('backupBannerText');
+    if (!banner || !textEl) return;
+
+    if (entries.length === 0) {
+      banner.classList.remove('visible');
+      return;
+    }
+
+    const meta = getBackupMeta();
+    const now = Date.now();
+    if (meta.snoozedUntil && now < meta.snoozedUntil) {
+      banner.classList.remove('visible');
+      return;
+    }
+
+    const unsaved = meta.unsavedCount || 0;
+    if (unsaved <= 0) {
+      banner.classList.remove('visible');
+      return;
+    }
+
+    const daysSinceBackup = meta.lastBackupAt ? (now - meta.lastBackupAt) / (1000 * 60 * 60 * 24) : 999;
+    const neverBackedUpTrigger = !meta.lastBackupAt && entries.length >= 3;
+    const timeOrCountTrigger = meta.lastBackupAt && (daysSinceBackup >= 7 || unsaved >= 10);
+
+    if (neverBackedUpTrigger || timeOrCountTrigger) {
+      const label = unsaved === 1 ? 'רגע אחד חדש שלא גובה' : `${unsaved} רגעים חדשים שלא גובו`;
+      textEl.textContent = `יש לכם ${label} — שמרו עותק בדרייב או בוואטסאפ.`;
+      banner.classList.add('visible');
+    } else {
+      banner.classList.remove('visible');
+    }
+  }
+
+  async function requestPersistentStorage() {
+    try {
+      if (navigator.storage && navigator.storage.persist) {
+        const isPersisted = await navigator.storage.persisted();
+        if (!isPersisted) {
+          await navigator.storage.persist();
+        }
+      }
+    } catch (e) {}
+  }
+
+  function saveEntries(incrementUnsaved = false) {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+      if (incrementUnsaved) {
+        const meta = getBackupMeta();
+        meta.unsavedCount = (meta.unsavedCount || 0) + 1;
+        saveBackupMeta(meta);
+      }
+      updateBackupBanner();
     } catch (e) {
       alert('לא ניתן לשמור בזיכרון המקומי במצב תצוגה מקדימה. מומלץ לפתוח בדפדפן Chrome.');
     }
@@ -1101,7 +1433,7 @@
       entries.push(record);
     }
 
-    saveEntries();
+    saveEntries(true);
     renderTable();
     closeModal();
   }
@@ -1172,11 +1504,7 @@
     renderTable();
   }
 
-  function exportCSV() {
-    if (entries.length === 0) {
-      alert('אין עדיין רשומות לייצוא.');
-      return;
-    }
+  function buildCSVContent() {
     const headers = ['תאריך', 'יום', 'שעה', 'סוג', 'אירוע', 'תחושות', 'מחשבות', 'מצבי רוח ורגשות', 'מחשבות בזמן כתיבה בטבלה'];
     const sorted = [...entries].sort((a, b) => `${b.date}T${b.time || '00:00'}`.localeCompare(`${a.date}T${a.time || '00:00'}`));
 
@@ -1192,17 +1520,47 @@
       item.metaThoughts
     ].map(val => `"${String(val || '').replace(/"/g, '""')}"`).join(','));
 
-    const csvContent = '\uFEFF' + [headers.join(','), ...rows].join('\n');
+    return '\uFEFF' + [headers.join(','), ...rows].join('\n');
+  }
+
+  function exportCSV() {
+    if (entries.length === 0) {
+      alert('אין עדיין רשומות לייצוא.');
+      return;
+    }
+    const csvContent = buildCSVContent();
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `moments-log-${getTodayISO()}.csv`;
+    a.download = `moments-${getTodayISO()}.csv`;
     a.click();
     URL.revokeObjectURL(url);
+    markBackupCompleted();
+  }
+
+  function compareVersions(a, b) {
+    const pa = String(a || '0').split('.').map(Number);
+    const pb = String(b || '0').split('.').map(Number);
+    const len = Math.max(pa.length, pb.length);
+    for (let i = 0; i < len; i++) {
+      const na = pa[i] || 0;
+      const nb = pb[i] || 0;
+      if (na > nb) return 1;
+      if (na < nb) return -1;
+    }
+    return 0;
+  }
+
+  function syncVersionLabel() {
+    const el = document.getElementById('appVersionLabel');
+    if (el) el.textContent = `גרסה ${APP_VERSION}`;
   }
 
   function openBackupDialog() {
+    syncVersionLabel();
+    const statusEl = document.getElementById('versionStatusMsg');
+    if (statusEl) statusEl.textContent = '';
     document.getElementById('backupDialog').classList.add('open');
   }
 
@@ -1210,26 +1568,65 @@
     document.getElementById('backupDialog').classList.remove('open');
   }
 
-  async function forceAppUpdate() {
+  async function checkAndUpdateVersion() {
+    const statusEl = document.getElementById('versionStatusMsg');
+    if (statusEl) statusEl.textContent = 'בודקים מול השרת אם קיימת גרסה חדשה...';
+
     try {
-      if ('caches' in window) {
-        const keys = await caches.keys();
-        await Promise.all(keys.map(k => caches.delete(k)));
+      const res = await fetch('./index.html?vcheck=' + Date.now(), { cache: 'no-store' });
+      const htmlText = await res.text();
+      const match = htmlText.match(/const\s+APP_VERSION\s*=\s*['"]([^'"]+)['"]/);
+      const remoteVersion = match ? match[1] : null;
+
+      if (remoteVersion && compareVersions(remoteVersion, APP_VERSION) > 0) {
+        if (statusEl) statusEl.textContent = `נמצאה גרסה ${remoteVersion} — מנקים מטמון וטוענים...`;
+        if ('caches' in window) {
+          const keys = await caches.keys();
+          await Promise.all(keys.map(k => caches.delete(k)));
+        }
+        const baseUrl = window.location.origin + window.location.pathname;
+        window.location.replace(`${baseUrl}?v=${encodeURIComponent(remoteVersion)}&t=${Date.now()}`);
+        return;
       }
-      await fetch('./index.html?t=' + Date.now(), { cache: 'reload' });
-    } catch (e) {}
-    const baseUrl = window.location.origin + window.location.pathname;
-    window.location.replace(baseUrl + '?refresh=' + Date.now());
+
+      if (statusEl) {
+        statusEl.textContent = `האפליקציה מעודכנת לגרסה האחרונה (${APP_VERSION}).`;
+      }
+    } catch (e) {
+      if (statusEl) {
+        statusEl.textContent = 'לא ניתן לבדוק עדכון כרגע (אין חיבור לרשת).';
+      }
+    }
   }
 
-  function downloadJSON() {
-    const blob = new Blob([JSON.stringify(entries, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `moments-backup-${getTodayISO()}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
+  async function shareBackupFile() {
+    if (entries.length === 0) {
+      alert('אין עדיין רשומות לגיבוי.');
+      return;
+    }
+    const fileName = `moments-${getTodayISO()}.csv`;
+    const csvContent = buildCSVContent();
+    const file = new File([csvContent], fileName, { type: 'text/csv;charset=utf-8' });
+
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({
+          title: 'Moments — גיבוי יומן',
+          text: `גיבוי יומן Moments (${entries.length} רשומות)`,
+          files: [file]
+        });
+        markBackupCompleted();
+        closeBackupDialog();
+        return;
+      } catch (err) {
+        if (err && err.name === 'AbortError') {
+          return;
+        }
+      }
+    }
+
+    exportCSV();
+    closeBackupDialog();
   }
 
   function parseCSVLine(line) {
@@ -1311,37 +1708,29 @@
         const text = ev.target.result.replace(/^\uFEFF/, '').trim();
         let imported = [];
 
-        if (file.name.toLowerCase().endsWith('.csv') || (!text.startsWith('[') && !text.startsWith('{'))) {
-          const lines = text.split(/\r?\n/).filter(l => l.trim());
-          if (lines.length < 2) {
-            alert('קובץ ה-CSV ריק או לא תקין.');
-            return;
-          }
-          imported = lines.slice(1).map((line, idx) => {
-            const cols = parseCSVLine(line);
-            return {
-              id: `${Date.now()}_${idx}`,
-              date: normalizeDateInput(cols[0]),
-              time: (cols[2] || '12:00').trim(),
-              type: (cols[3] || '').includes('שלילי') ? 'negative' : 'positive',
-              event: (cols[4] || '').trim(),
-              sensations: (cols[5] || '').trim(),
-              thoughts: (cols[6] || '').trim(),
-              emotions: (cols[7] || '').trim(),
-              metaThoughts: (cols[8] || '').trim()
-            };
-          }).filter(r => r.date && r.event);
+        const lines = text.split(/\r?\n/).filter(l => l.trim());
+        if (lines.length < 2) {
+          alert('קובץ האקסל (CSV) ריק או לא תקין.');
+          return;
+        }
+        imported = lines.slice(1).map((line, idx) => {
+          const cols = parseCSVLine(line);
+          return {
+            id: `${Date.now()}_${idx}`,
+            date: normalizeDateInput(cols[0]),
+            time: (cols[2] || '12:00').trim(),
+            type: (cols[3] || '').includes('שלילי') ? 'negative' : 'positive',
+            event: (cols[4] || '').trim(),
+            sensations: (cols[5] || '').trim(),
+            thoughts: (cols[6] || '').trim(),
+            emotions: (cols[7] || '').trim(),
+            metaThoughts: (cols[8] || '').trim()
+          };
+        }).filter(r => r.date && r.event);
 
-          if (imported.length === 0) {
-            alert('לא נמצאו רשומות תקינות בקובץ ה-CSV.');
-            return;
-          }
-        } else {
-          imported = JSON.parse(text);
-          if (!Array.isArray(imported)) {
-            alert('קובץ הגיבוי אינו תקין.');
-            return;
-          }
+        if (imported.length === 0) {
+          alert('לא נמצאו רשומות תקינות בקובץ האקסל.');
+          return;
         }
 
         const { addedCount, skippedCount } = mergeImportedEntries(imported);
@@ -1364,8 +1753,11 @@
     e.target.value = '';
   }
 
+  syncVersionLabel();
   loadEntries();
   renderTable();
+  updateBackupBanner();
+  requestPersistentStorage();
 </script>
 </body>
 </html>
