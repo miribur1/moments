@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#5b8fb9" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Moments" />
+  <title>Moments</title>
+
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="apple-touch-icon" href="./icon.png" />
+
+  <style>
+    :root {
+      --bg: #f4f9fa;
+      --surface: #ffffff;
+      --surface-alt: #eef6f7;
+      --border: #dce9ec;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --primary: #4f9da6;
+      --primary-hover: #3d848d;
+      --primary-gradient: linear-gradient(135deg, #4ecdc4 0%, #7b8cde 100%);
+      --pos-bg: #e0f5f0;
+      --pos-text: #166558;
+      --pos-border: #86d8c9;
+      --neg-bg: #fde8e8;
+      --neg-text: #9b2c2c;
+      --neg-border: #f8b4b4;
+      --reflection-bg: #f3f2fc;
+      --reflection-border: #d4d0f5;
+      --radius: 14px;
+      --shadow: 0 4px 14px rgba(30, 41, 59, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
+    }
+
+    .app-container {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      height: 100dvh;
+      max-width: 1400px;
+      margin: 0 auto;
+      background: var(--surface);
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+      gap: 8px;
+    }
+
+    .brand-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-title img {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      white-space: nowrap;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .icon-btn {
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 9px;
+      padding: 6px 10px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+
+    .icon-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .controls-bar {
+      padding: 10px 16px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .search-box {
+      position: relative;
+      width: 100%;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 8px 34px 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      font-size: 0.9rem;
+      background: var(--surface-alt);
+      color: var(--text);
+    }
+
+    .search-box input:focus {
+      outline: none;
+      border-color: var(--primary);
+      background: var(--surface);
+    }
+
+    .search-icon {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      pointer-events: none;
+    }
+
+    .filter-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .pill-group {
+      display: flex;
+      background: var(--surface-alt);
+      padding: 3px;
+      border-radius: 9px;
+      border: 1px solid var(--border);
+    }
+
+    .filter-pill {
+      border: none;
+      background: transparent;
+      padding: 5px 10px;
+      border-radius: 7px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .filter-pill.active {
+      background: var(--surface);
+      color: var(--text);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    .filter-pill.active[data-type="positive"] {
+      color: var(--pos-text);
+      background: var(--pos-bg);
+    }
+
+    .filter-pill.active[data-type="negative"] {
+      color: var(--neg-text);
+      background: var(--neg-bg);
+    }
+
+    .sort-date-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    select.filter-select, input.filter-date {
+      padding: 5px 8px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      font-size: 0.8rem;
+      background: var(--surface);
+      color: var(--text);
+    }
+
+    @media (orientation: landscape) and (min-width: 640px) {
+      .controls-bar {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 16px;
+      }
+      .search-box {
+        max-width: 260px;
+      }
+    }
+
+    .table-wrapper {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      position: relative;
+      padding-bottom: 90px;
+    }
+
+    .table-wrapper.scrollable-x {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: right;
+      font-size: 0.9rem;
+    }
+
+    thead {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: var(--surface-alt);
+      box-shadow: 0 1px 0 var(--border);
+    }
+
+    th {
+      padding: 10px 12px;
+      font-weight: 700;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      line-height: 1.4;
+    }
+
+    tbody tr {
+      cursor: pointer;
+    }
+
+    tbody tr:active {
+      background-color: var(--surface-alt);
+    }
+
+    /* Emoji Mood Badge & Date Cell */
+    .date-cell {
+      white-space: nowrap;
+      width: 138px;
+      font-size: 0.82rem;
+    }
+
+    .date-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .mood-badge {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .mood-badge.positive {
+      background-color: var(--pos-bg);
+      border: 1px solid var(--pos-border);
+    }
+
+    .mood-badge.negative {
+      background-color: var(--neg-bg);
+      border: 1px solid var(--neg-border);
+    }
+
+    .date-text-block {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .date-line {
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .time-line {
+      color: var(--text-muted);
+      font-size: 0.78rem;
+    }
+
+    .event-title {
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .match-snippet {
+      display: block;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    .col-extra {
+      display: none;
+    }
+
+    @media (orientation: landscape) and (min-width: 600px), (min-width: 820px) {
+      .col-extra {
+        display: table-cell;
+        min-width: 150px;
+        max-width: 240px;
+      }
+      .hide-on-wide {
+        display: none !important;
+      }
+    }
+
+    .table-wrapper.scrollable-x table {
+      min-width: 880px;
+    }
+    .table-wrapper.scrollable-x .col-extra {
+      display: table-cell;
+      min-width: 150px;
+    }
+    .table-wrapper.scrollable-x th:first-child,
+    .table-wrapper.scrollable-x td:first-child {
+      position: sticky;
+      right: 0;
+      background: var(--surface);
+      z-index: 5;
+      box-shadow: -2px 0 5px rgba(0,0,0,0.04);
+    }
+    .table-wrapper.scrollable-x thead th:first-child {
+      background: var(--surface-alt);
+      z-index: 12;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 48px 24px;
+      color: var(--text-muted);
+    }
+
+    /* Floating Action Button */
+    .fab {
+      position: fixed;
+      bottom: 22px;
+      left: 22px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--primary-gradient);
+      color: white;
+      border: none;
+      font-size: 2rem;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 18px rgba(78, 205, 196, 0.4);
+      cursor: pointer;
+      z-index: 100;
+      touch-action: manipulation;
+    }
+
+    .fab:active {
+      transform: scale(0.95);
+    }
+
+    /* Modal / Frame 1 */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--surface);
+      z-index: 9999;
+      display: none;
+      flex-direction: column;
+      height: 100vh;
+      height: 100dvh;
+    }
+
+    .modal-overlay.open {
+      display: flex !important;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      flex-shrink: 0;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      font-size: 1.1rem;
+    }
+
+    .btn-close {
+      background: none;
+      border: none;
+      font-size: 1.4rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 4px 10px;
+    }
+
+    .btn-delete {
+      background: var(--neg-bg);
+      color: var(--neg-text);
+      border: none;
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .modal-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      max-width: 720px;
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group label {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .type-selector {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .type-btn {
+      padding: 10px;
+      border-radius: 10px;
+      border: 2px solid var(--border);
+      background: var(--surface);
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: var(--text-muted);
+    }
+
+    .type-btn .btn-emoji {
+      font-size: 1.25rem;
+      line-height: 1;
+    }
+
+    .type-btn.selected[data-val="positive"] {
+      border-color: var(--pos-border);
+      background: var(--pos-bg);
+      color: var(--pos-text);
+    }
+
+    .type-btn.selected[data-val="negative"] {
+      border-color: var(--neg-border);
+      background: var(--neg-bg);
+      color: var(--neg-text);
+    }
+
+    input[type="text"], input[type="date"], input[type="time"], textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      background: var(--surface);
+      color: var(--text);
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 68px;
+    }
+
+    .day-preview {
+      font-size: 0.8rem;
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .chips-scroll {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+
+    .chips-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .chip {
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 5px 11px;
+      font-size: 0.8rem;
+      white-space: nowrap;
+      cursor: pointer;
+      color: var(--text);
+    }
+
+    .reflection-box {
+      background: var(--reflection-bg);
+      border: 1px solid var(--reflection-border);
+      border-radius: var(--radius);
+      padding: 12px;
+    }
+
+    .reflection-box label {
+      color: #4c468c;
+    }
+
+    .modal-footer {
+      padding: 12px 16px;
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+      flex-shrink: 0;
+    }
+
+    .btn-save {
+      width: 100%;
+      max-width: 720px;
+      margin: 0 auto;
+      display: block;
+      padding: 13px;
+      background: var(--primary-gradient);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .dialog-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(30, 41, 59, 0.5);
+      z-index: 10000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .dialog-backdrop.open {
+      display: flex !important;
+    }
+
+    .dialog-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 20px;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .dialog-btn {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface-alt);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-title">
+      <img src="./icon.png" alt="Moments" onerror="this.style.display='none'" />
+      <h1 dir="ltr">Moments</h1>
+    </div>
+    <div class="header-actions">
+      <button type="button" id="toggleColsBtn" class="icon-btn hide-on-wide" onclick="toggleColumns()">⤢ כל העמודות</button>
+      <button type="button" id="exportCsvBtn" class="icon-btn" onclick="exportCSV()">📤 אקסל</button>
+      <button type="button" id="backupMenuBtn" class="icon-btn" onclick="openBackupDialog()">⋮</button>
+    </div>
+  </header>
+
+  <div class="controls-bar">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="חיפוש באירועים, תחושות, מחשבות או רגשות..." oninput="handleSearch(this.value)" />
+    </div>
+
+    <div class="filter-row">
+      <div class="pill-group" id="typeFilterGroup">
+        <button type="button" class="filter-pill active" data-type="all" onclick="setFilterType('all', this)">הכל</button>
+        <button type="button" class="filter-pill" data-type="positive" onclick="setFilterType('positive', this)">😌 חיובי</button>
+        <button type="button" class="filter-pill" data-type="negative" onclick="setFilterType('negative', this)">😣 שלילי</button>
+      </div>
+
+      <div class="sort-date-group">
+        <select id="dateFilterSelect" class="filter-select" onchange="handleDateFilter(this.value)">
+          <option value="all">כל התאריכים</option>
+          <option value="today">היום</option>
+          <option value="week">7 ימים אחרונים</option>
+          <option value="custom">תאריך מסוים...</option>
+        </select>
+        <input type="date" id="customDateInput" class="filter-date" style="display:none;" onchange="handleCustomDate(this.value)" />
+        <button type="button" id="sortOrderBtn" class="icon-btn" onclick="toggleSort()">⇅ חדש לישן</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-wrapper" id="tableWrapper">
+    <table id="eventsTable">
+      <thead>
+        <tr>
+          <th>יום ושעה</th>
+          <th>אירוע</th>
+          <th class="col-extra">תחושות</th>
+          <th class="col-extra">מחשבות</th>
+          <th class="col-extra">מצבי רוח ורגשות</th>
+          <th class="col-extra">מחשבות בזמן כתיבה בטבלה</th>
+        </tr>
+      </thead>
+      <tbody id="eventsTableBody"></tbody>
+    </table>
+    <div id="emptyState" class="empty-state" style="display:none;">
+      <div style="font-size: 2.2rem;">🌿</div>
+      <p>עדיין אין רגעים רשומים.<br>לחצו על כפתור ה־<strong>+</strong> למטה כדי לתעד רגע ראשון מהיום.</p>
+    </div>
+  </div>
+
+  <button type="button" class="fab" id="addEntryBtn" onclick="openAddModal()" aria-label="הוספת אירוע">+</button>
+</div>
+
+<!-- Frame 1: Add / Edit Entry Modal -->
+<div class="modal-overlay" id="entryModal">
+  <div class="modal-header">
+    <button type="button" class="btn-close" onclick="closeModal()" aria-label="סגור">✕</button>
+    <h2 id="modalTitle">אירוע חדש</h2>
+    <button type="button" class="btn-delete" id="deleteEntryBtn" onclick="deleteCurrentEntry()" style="display:none;">מחק</button>
+  </div>
+
+  <form class="modal-body" id="entryForm" onsubmit="saveForm(event)">
+    <input type="hidden" id="entryId" />
+
+    <div class="form-group">
+      <label>סוג אירוע</label>
+      <div class="type-selector">
+        <button type="button" class="type-btn selected" data-val="positive" onclick="setTypeButtons('positive')">
+          <span class="btn-emoji">😌</span> חיובי
+        </button>
+        <button type="button" class="type-btn" data-val="negative" onclick="setTypeButtons('negative')">
+          <span class="btn-emoji">😣</span> שלילי
+        </button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>יום ושעה <span class="day-preview" id="hebrewDayLabel"></span></label>
+      <div class="form-row">
+        <input type="date" id="entryDate" onchange="updateDayPreview()" required />
+        <input type="time" id="entryTime" required />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="entryEvent">1. אירוע *</label>
+      <textarea id="entryEvent" rows="2" placeholder="מה קרה? תיאור קצר ועובדתי..." required></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="entrySensations">2. תחושות (בגוף)</label>
+      <textarea id="entrySensations" rows="2" placeholder="איפה ואיך זה מורגש בגוף?"></textarea>
+      <div class="chips-scroll">
+        <button type="button" class="chip" onclick="addChip('entrySensations', 'מתח בכתפיים')">+ מתח בכתפיים</button>
+        <button type="button" class="chip" onclick="addChip('entrySensations', 'לחץ בחזה')">+ לחץ בחזה</button>
+        <button type="button" class="chip" onclick="addChip('entrySensations', 'דופק מהיר')">+ דופק מהיר</button>
+        <button type="button" class="chip" onclick="addChip('entrySensations', 'כבדות')">+ כבדות</button>
+        <button type="button" class="chip" onclick="addChip('entrySensations', 'חמימות')">+ חמימות</button>
+        <button type="button" class="chip" onclick="addChip('entrySensations', 'נשימה עמוקה')">+ נשימה עמוקה</button>
+        <button type="button" class="chip" onclick="addChip('entrySensations', 'רפיון')">+ רפיון</button>
+        <button type="button" class="chip" onclick="addChip('entrySensations', 'אנרגיה')">+ אנרגיה</button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="entryThoughts">3. מחשבות</label>
+      <textarea id="entryThoughts" rows="2" placeholder="מה עבר לי בראש באותו רגע?"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="entryEmotions">4. מצבי רוח ורגשות</label>
+      <textarea id="entryEmotions" rows="2" placeholder="מה הרגשתי?"></textarea>
+      <div class="chips-scroll">
+        <button type="button" class="chip" onclick="addChip('entryEmotions', 'שמחה')">+ שמחה</button>
+        <button type="button" class="chip" onclick="addChip('entryEmotions', 'רוגע')">+ רוגע</button>
+        <button type="button" class="chip" onclick="addChip('entryEmotions', 'הכרת תודה')">+ הכרת תודה</button>
+        <button type="button" class="chip" onclick="addChip('entryEmotions', 'הקלה')">+ הקלה</button>
+        <button type="button" class="chip" onclick="addChip('entryEmotions', 'תסכול')">+ תסכול</button>
+        <button type="button" class="chip" onclick="addChip('entryEmotions', 'כעס')">+ כעס</button>
+        <button type="button" class="chip" onclick="addChip('entryEmotions', 'עצב')">+ עצב</button>
+        <button type="button" class="chip" onclick="addChip('entryEmotions', 'חרדה')">+ חרדה</button>
+        <button type="button" class="chip" onclick="addChip('entryEmotions', 'אכזבה')">+ אכזבה</button>
+      </div>
+    </div>
+
+    <div class="form-group reflection-box">
+      <label for="entryMetaThoughts">5. איזה מחשבות עולות עכשיו בזמן כתיבה בטבלה?</label>
+      <textarea id="entryMetaThoughts" rows="2" placeholder="התבוננות ברגע הנוכחי תוך כדי הכתיבה..."></textarea>
+    </div>
+  </form>
+
+  <div class="modal-footer">
+    <button type="submit" form="entryForm" class="btn-save">שמור אירוע</button>
+  </div>
+</div>
+
+<!-- Backup / Restore Dialog -->
+<div class="dialog-backdrop" id="backupDialog">
+  <div class="dialog-card">
+    <h3>גיבוי ושחזור נתונים</h3>
+    <p>כל הרשומות נשמרות באופן פרטי על המכשיר שלך בלבד. מומלץ מדי פעם לשמור קובץ גיבוי.</p>
+    <button type="button" class="dialog-btn" onclick="downloadJSON()">💾 הורד קובץ גיבוי (JSON)</button>
+    <button type="button" class="dialog-btn" onclick="document.getElementById('restoreFileInput').click()">📂 שחזר מקובץ גיבוי</button>
+    <input type="file" id="restoreFileInput" accept=".json" style="display:none;" onchange="restoreJSON(event)" />
+    <button type="button" class="dialog-btn" onclick="closeBackupDialog()" style="background:transparent;">סגור</button>
+  </div>
+</div>
+
+<script>
+  const STORAGE_KEY = 'mindfulness_journal_entries_v1';
+  const HEBREW_DAYS = ['יום א׳', 'יום ב׳', 'יום ג׳', 'יום ד׳', 'יום ה׳', 'יום ו׳', 'שבת'];
+
+  let entries = [];
+  let filterType = 'all';
+  let filterDateMode = 'all';
+  let filterCustomDate = '';
+  let sortDesc = true;
+  let searchQuery = '';
+  let selectedEventType = 'positive';
+
+  function loadEntries() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      entries = raw ? JSON.parse(raw) : [];
+    } catch (e) {
+      entries = [];
+    }
+  }
+
+  function saveEntries() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+    } catch (e) {
+      alert('לא ניתן לשמור בזיכרון המקומי במצב תצוגה מקדימה. מומלץ לפתוח בדפדפן Chrome.');
+    }
+  }
+
+  function getHebrewDayName(dateStr) {
+    if (!dateStr) return '';
+    const [y, m, d] = dateStr.split('-').map(Number);
+    const dt = new Date(y, m - 1, d);
+    return HEBREW_DAYS[dt.getDay()] || '';
+  }
+
+  function formatDisplayDate(dateStr) {
+    if (!dateStr) return '';
+    const [y, m, d] = dateStr.split('-');
+    const dayName = getHebrewDayName(dateStr);
+    return `${dayName}, ${d}.${m}`;
+  }
+
+  function getTodayISO() {
+    const now = new Date();
+    const offset = now.getTimezoneOffset() * 60000;
+    return new Date(now - offset).toISOString().slice(0, 10);
+  }
+
+  function getNowTime() {
+    const now = new Date();
+    return now.toTimeString().slice(0, 5);
+  }
+
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function renderTable() {
+    const tableBody = document.getElementById('eventsTableBody');
+    const emptyState = document.getElementById('emptyState');
+    const todayStr = getTodayISO();
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    const weekStr = sevenDaysAgo.toISOString().slice(0, 10);
+
+    const q = searchQuery.trim().toLowerCase();
+
+    let filtered = entries.filter(item => {
+      if (filterType !== 'all' && item.type !== filterType) return false;
+      if (filterDateMode === 'today' && item.date !== todayStr) return false;
+      if (filterDateMode === 'week' && item.date < weekStr) return false;
+      if (filterDateMode === 'custom' && filterCustomDate && item.date !== filterCustomDate) return false;
+
+      if (q) {
+        const haystack = [
+          item.event,
+          item.sensations,
+          item.thoughts,
+          item.emotions,
+          item.metaThoughts,
+          formatDisplayDate(item.date)
+        ].join(' ').toLowerCase();
+        if (!haystack.includes(q)) return false;
+      }
+      return true;
+    });
+
+    filtered.sort((a, b) => {
+      const keyA = `${a.date}T${a.time || '00:00'}`;
+      const keyB = `${b.date}T${b.time || '00:00'}`;
+      return sortDesc ? keyB.localeCompare(keyA) : keyA.localeCompare(keyB);
+    });
+
+    tableBody.innerHTML = '';
+
+    if (filtered.length === 0) {
+      emptyState.style.display = 'block';
+      return;
+    }
+
+    emptyState.style.display = 'none';
+
+    filtered.forEach(item => {
+      const tr = document.createElement('tr');
+      tr.onclick = () => openEditModal(item);
+
+      let snippetHtml = '';
+      if (q && !item.event.toLowerCase().includes(q)) {
+        const secondaryFields = [
+          { label: 'תחושות', val: item.sensations },
+          { label: 'מחשבות', val: item.thoughts },
+          { label: 'רגשות', val: item.emotions },
+          { label: 'בזמן כתיבה', val: item.metaThoughts }
+        ];
+        const hit = secondaryFields.find(f => f.val && f.val.toLowerCase().includes(q));
+        if (hit) {
+          snippetHtml = `<span class="match-snippet">${hit.label}: ${escapeHtml(hit.val)}</span>`;
+        }
+      }
+
+      const moodEmoji = item.type === 'negative' ? '😣' : '😌';
+      const moodClass = item.type === 'negative' ? 'negative' : 'positive';
+
+      tr.innerHTML = `
+        <td class="date-cell">
+          <div class="date-wrapper">
+            <span class="mood-badge ${moodClass}">${moodEmoji}</span>
+            <div class="date-text-block">
+              <span class="date-line">${formatDisplayDate(item.date)}</span>
+              <span class="time-line">${escapeHtml(item.time || '')}</span>
+            </div>
+          </div>
+        </td>
+        <td>
+          <div class="event-title">${escapeHtml(item.event)}</div>
+          ${snippetHtml}
+        </td>
+        <td class="col-extra">${escapeHtml(item.sensations || '—')}</td>
+        <td class="col-extra">${escapeHtml(item.thoughts || '—')}</td>
+        <td class="col-extra">${escapeHtml(item.emotions || '—')}</td>
+        <td class="col-extra">${escapeHtml(item.metaThoughts || '—')}</td>
+      `;
+      tableBody.appendChild(tr);
+    });
+  }
+
+  function setTypeButtons(type) {
+    selectedEventType = type;
+    document.querySelectorAll('.type-btn').forEach(btn => {
+      btn.classList.toggle('selected', btn.dataset.val === type);
+    });
+  }
+
+  function updateDayPreview() {
+    const dayName = getHebrewDayName(document.getElementById('entryDate').value);
+    document.getElementById('hebrewDayLabel').textContent = dayName ? `(${dayName})` : '';
+  }
+
+  function openAddModal() {
+    document.getElementById('modalTitle').textContent = 'אירוע חדש';
+    document.getElementById('deleteEntryBtn').style.display = 'none';
+    document.getElementById('entryId').value = '';
+    setTypeButtons('positive');
+    document.getElementById('entryDate').value = getTodayISO();
+    document.getElementById('entryTime').value = getNowTime();
+    updateDayPreview();
+    document.getElementById('entryEvent').value = '';
+    document.getElementById('entrySensations').value = '';
+    document.getElementById('entryThoughts').value = '';
+    document.getElementById('entryEmotions').value = '';
+    document.getElementById('entryMetaThoughts').value = '';
+    document.getElementById('entryModal').classList.add('open');
+  }
+
+  function openEditModal(item) {
+    document.getElementById('modalTitle').textContent = 'עריכת אירוע';
+    document.getElementById('deleteEntryBtn').style.display = 'inline-block';
+    document.getElementById('entryId').value = item.id;
+    setTypeButtons(item.type || 'positive');
+    document.getElementById('entryDate').value = item.date;
+    document.getElementById('entryTime').value = item.time || '12:00';
+    updateDayPreview();
+    document.getElementById('entryEvent').value = item.event || '';
+    document.getElementById('entrySensations').value = item.sensations || '';
+    document.getElementById('entryThoughts').value = item.thoughts || '';
+    document.getElementById('entryEmotions').value = item.emotions || '';
+    document.getElementById('entryMetaThoughts').value = item.metaThoughts || '';
+    document.getElementById('entryModal').classList.add('open');
+  }
+
+  function closeModal() {
+    document.getElementById('entryModal').classList.remove('open');
+  }
+
+  function addChip(targetId, word) {
+    const el = document.getElementById(targetId);
+    const current = el.value.trim();
+    if (!current) {
+      el.value = word;
+    } else if (!current.includes(word)) {
+      el.value = `${current}, ${word}`;
+    }
+  }
+
+  function saveForm(e) {
+    e.preventDefault();
+    const id = document.getElementById('entryId').value || Date.now().toString();
+    const record = {
+      id,
+      type: selectedEventType,
+      date: document.getElementById('entryDate').value,
+      time: document.getElementById('entryTime').value,
+      event: document.getElementById('entryEvent').value.trim(),
+      sensations: document.getElementById('entrySensations').value.trim(),
+      thoughts: document.getElementById('entryThoughts').value.trim(),
+      emotions: document.getElementById('entryEmotions').value.trim(),
+      metaThoughts: document.getElementById('entryMetaThoughts').value.trim()
+    };
+
+    const existingIdx = entries.findIndex(x => x.id === id);
+    if (existingIdx >= 0) {
+      entries[existingIdx] = record;
+    } else {
+      entries.push(record);
+    }
+
+    saveEntries();
+    renderTable();
+    closeModal();
+  }
+
+  function deleteCurrentEntry() {
+    const id = document.getElementById('entryId').value;
+    if (!id) return;
+    if (confirm('למחוק את האירוע הזה לצמיתות?')) {
+      entries = entries.filter(x => x.id !== id);
+      saveEntries();
+      renderTable();
+      closeModal();
+    }
+  }
+
+  function toggleColumns() {
+    const wrapper = document.getElementById('tableWrapper');
+    const btn = document.getElementById('toggleColsBtn');
+    const expanded = wrapper.classList.toggle('scrollable-x');
+    btn.classList.toggle('active', expanded);
+    btn.textContent = expanded ? '⤡ צמצם עמודות' : '⤢ כל העמודות';
+  }
+
+  function handleSearch(val) {
+    searchQuery = val;
+    renderTable();
+  }
+
+  function setFilterType(type, btnEl) {
+    document.querySelectorAll('#typeFilterGroup .filter-pill').forEach(p => p.classList.remove('active'));
+    btnEl.classList.add('active');
+    filterType = type;
+    renderTable();
+  }
+
+  function handleDateFilter(mode) {
+    filterDateMode = mode;
+    const customInput = document.getElementById('customDateInput');
+    if (mode === 'custom') {
+      customInput.style.display = 'inline-block';
+      if (!customInput.value) customInput.value = getTodayISO();
+      filterCustomDate = customInput.value;
+    } else {
+      customInput.style.display = 'none';
+    }
+    renderTable();
+  }
+
+  function handleCustomDate(val) {
+    filterCustomDate = val;
+    renderTable();
+  }
+
+  function toggleSort() {
+    sortDesc = !sortDesc;
+    document.getElementById('sortOrderBtn').textContent = sortDesc ? '⇅ חדש לישן' : '⇅ ישן לחדש';
+    renderTable();
+  }
+
+  function exportCSV() {
+    if (entries.length === 0) {
+      alert('אין עדיין רשומות לייצוא.');
+      return;
+    }
+    const headers = ['תאריך', 'יום', 'שעה', 'סוג', 'אירוע', 'תחושות', 'מחשבות', 'מצבי רוח ורגשות', 'מחשבות בזמן כתיבה בטבלה'];
+    const sorted = [...entries].sort((a, b) => `${b.date}T${b.time}`.localeCompare(`${a.date}T${a.time}`));
+
+    const rows = sorted.map(item => [
+      item.date,
+      getHebrewDayName(item.date),
+      item.time || '',
+      item.type === 'positive' ? 'חיובי' : 'שלילי',
+      item.event,
+      item.sensations,
+      item.thoughts,
+      item.emotions,
+      item.metaThoughts
+    ].map(val => `"${String(val || '').replace(/"/g, '""')}"`).join(','));
+
+    const csvContent = '\uFEFF' + [headers.join(','), ...rows].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `moments-log-${getTodayISO()}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function openBackupDialog() {
+    document.getElementById('backupDialog').classList.add('open');
+  }
+
+  function closeBackupDialog() {
+    document.getElementById('backupDialog').classList.remove('open');
+  }
+
+  function downloadJSON() {
+    const blob = new Blob([JSON.stringify(entries, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `moments-backup-${getTodayISO()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function restoreJSON(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      try {
+        const imported = JSON.parse(ev.target.result);
+        if (Array.isArray(imported)) {
+          entries = imported;
+          saveEntries();
+          renderTable();
+          closeBackupDialog();
+          alert(`שוחזרו בהצלחה ${entries.length} רשומות!`);
+        } else {
+          alert('קובץ הגיבוי אינו תקין.');
+        }
+      } catch (err) {
+        alert('שגיאה בקריאת הקובץ.');
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  }
+
+  loadEntries();
+  renderTable();
+</script>
+</body>
+</html>
