@@ -1,0 +1,89 @@
+name: Auto Bump Version
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'index.html'
+
+permissions:
+  contents: write
+  pages: write
+
+jobs:
+  bump-version:
+    if: github.actor != 'github-actions[bot]' && !contains(github.event.head_commit.message, '[skip ci]')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Bump patch version in index.html
+        id: bump
+        run: |
+          python3 - << 'EOF'
+          import os, re, subprocess
+
+          PATTERN = r"const\s+APP_VERSION\s*=\s*'(\d+)\.(\d+)\.(\d+)'"
+
+          def extract_ver(text):
+              m = re.search(PATTERN, text)
+              return tuple(map(int, m.groups())) if m else None
+
+          with open("index.html", "r", encoding="utf-8") as f:
+              html = f.read()
+
+          curr = extract_ver(html)
+          if not curr:
+              raise SystemExit("APP_VERSION not found in index.html")
+
+          prev = None
+          try:
+              prev_html = subprocess.check_output(
+                  ["git", "show", "HEAD~1:index.html"], text=True, stderr=subprocess.DEVNULL
+              )
+              prev = extract_ver(prev_html)
+          except Exception:
+              pass
+
+          # If version was already bumped manually, keep it as-is
+          if prev and curr > prev:
+              print(f"Manual bump detected ({prev} -> {curr}), skipping auto-bump.")
+              with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as out:
+                  out.write("changed=false\n")
+              raise SystemExit(0)
+
+          base = max(curr, prev) if prev else curr
+          old_str = f"{curr[0]}.{curr[1]}.{curr[2]}"
+          new_str = f"{base[0]}.{base[1]}.{base[2] + 1}"
+
+          html = html.replace(f"const APP_VERSION = '{old_str}';", f"const APP_VERSION = '{new_str}';")
+          html = html.replace(f"גרסה {old_str}", f"גרסה {new_str}")
+
+          with open("index.html", "w", encoding="utf-8") as f:
+              f.write(html)
+
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as out:
+              out.write("changed=true\n")
+              out.write(f"version={new_str}\n")
+          print(f"Bumped version: {old_str} -> {new_str}")
+          EOF
+
+      - name: Commit and push bumped version
+        if: steps.bump.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "chore: bump version to v${{ steps.bump.outputs.version }} [skip ci]"
+          git push
+
+      - name: Trigger GitHub Pages rebuild
+        if: steps.bump.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api --method POST "/repos/${{ github.repository }}/pages/builds" || true
