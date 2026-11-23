@@ -151,10 +151,10 @@
 
     .search-box input[type="text"] {
       width: 100%;
-      padding: 8px 38px 8px 34px;
+      padding: 8px 28px 8px 30px;
       border: 1px solid var(--border);
       border-radius: 9px;
-      font-size: 0.9rem;
+      font-size: 0.86rem;
       background: var(--surface-alt);
       color: var(--text);
     }
@@ -167,11 +167,13 @@
 
     .search-icon {
       position: absolute;
-      right: 10px;
+      right: 9px;
       top: 50%;
       transform: translateY(-50%);
       color: var(--text-muted);
-      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       pointer-events: none;
     }
 
@@ -721,56 +723,61 @@
     .settings-topbar {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      padding: 14px 16px 6px;
+      justify-content: flex-start;
+      padding: 10px 14px 2px;
       flex-shrink: 0;
     }
 
     .settings-close-btn {
       background: none;
       border: none;
-      color: var(--text);
-      font-size: 1.5rem;
+      color: #475569;
+      font-size: 1.35rem;
       line-height: 1;
-      padding: 6px 10px;
+      padding: 6px 8px;
       cursor: pointer;
     }
 
     .settings-scroll {
       flex: 1;
       overflow-y: auto;
-      padding: 4px 20px 36px;
+      padding: 0 22px 18px;
       max-width: 640px;
       width: 100%;
       margin: 0 auto;
     }
 
     .settings-heading {
-      margin: 0 0 8px;
+      margin: 0 0 4px;
       text-align: center;
-      font-size: 1.65rem;
-      font-weight: 800;
-      color: #0f172a;
-      letter-spacing: -0.4px;
+      font-size: 1.35rem;
+      font-weight: 600;
+      color: #111827;
+      letter-spacing: -0.2px;
     }
 
     .settings-privacy-note {
-      margin: 0 0 28px;
+      margin: 0 0 18px;
       text-align: center;
-      font-size: 0.92rem;
-      color: #64748b;
-      line-height: 1.45;
+      font-size: 0.84rem;
+      font-weight: 400;
+      color: #6b7280;
+      line-height: 1.35;
     }
 
     .settings-block {
-      margin-bottom: 24px;
+      margin-bottom: 14px;
+    }
+
+    .settings-block:last-child {
+      margin-bottom: 4px;
     }
 
     .settings-block-title {
-      font-size: 1rem;
-      font-weight: 800;
-      color: #0f172a;
-      margin-bottom: 6px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 2px;
       text-align: right;
     }
 
@@ -778,8 +785,8 @@
       width: 100%;
       background: transparent;
       border: none;
-      border-bottom: 1px solid #e2e8f0;
-      padding: 15px 4px;
+      border-bottom: 1px solid #eceff3;
+      padding: 11px 2px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -789,39 +796,40 @@
       font-family: inherit;
     }
 
-    .settings-row-btn:last-child {
+    .settings-row-btn:last-of-type {
       border-bottom: none;
     }
 
     .settings-row-btn:active {
-      background: #f8fafc;
+      background: #f9fafb;
     }
 
     .settings-row-content {
       flex: 1;
       display: flex;
       flex-direction: column;
-      gap: 3px;
+      gap: 2px;
       min-width: 0;
     }
 
     .settings-row-title {
-      font-size: 1.02rem;
-      font-weight: 700;
-      color: #0f172a;
-      line-height: 1.3;
+      font-size: 0.96rem;
+      font-weight: 600;
+      color: #111827;
+      line-height: 1.28;
     }
 
     .settings-row-sub {
-      font-size: 0.85rem;
-      color: #64748b;
-      line-height: 1.35;
+      font-size: 0.82rem;
+      font-weight: 400;
+      color: #6b7280;
+      line-height: 1.3;
     }
 
     .settings-row-icon {
-      width: 24px;
-      height: 24px;
-      color: #1e293b;
+      width: 22px;
+      height: 22px;
+      color: #374151;
       flex-shrink: 0;
       display: inline-flex;
       align-items: center;
@@ -830,8 +838,8 @@
 
     .settings-info-row {
       width: 100%;
-      border-bottom: 1px solid #e2e8f0;
-      padding: 15px 4px;
+      border-bottom: 1px solid #eceff3;
+      padding: 11px 2px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -840,11 +848,11 @@
     }
 
     .settings-status-msg {
-      margin-top: 10px;
-      font-size: 0.84rem;
-      font-weight: 600;
+      margin-top: 6px;
+      font-size: 0.8rem;
+      font-weight: 500;
       color: var(--primary);
-      min-height: 1.2em;
+      min-height: 1.1em;
     }
   </style>
 </head>
@@ -858,14 +866,24 @@
     </div>
     <div class="header-actions">
       <button type="button" id="toggleColsBtn" class="icon-btn hide-on-wide" onclick="toggleColumns()">⤢ כל העמודות</button>
-      <button type="button" id="backupMenuBtn" class="icon-btn" onclick="openBackupDialog()" aria-label="הגדרות">⚙️</button>
+      <button type="button" id="backupMenuBtn" class="icon-btn" onclick="openBackupDialog()" aria-label="הגדרות">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+      </button>
     </div>
   </header>
 
   <div class="controls-bar">
     <div class="search-box">
-      <span class="search-icon">🔍</span>
-      <input type="text" id="searchInput" placeholder="חיפוש באירועים, תחושות, מחשבות, רגשות..." oninput="handleSearch(this.value)" />
+      <span class="search-icon" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="7"/>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+      </span>
+      <input type="text" id="searchInput" placeholder="חיפוש אירועים, תחושות, מחשבות, רגשות..." oninput="handleSearch(this.value)" />
       <button type="button" id="searchClearBtn" class="search-clear-btn" onclick="clearSearch()" aria-label="ניקוי חיפוש">✕</button>
     </div>
 
