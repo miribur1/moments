@@ -941,9 +941,11 @@
 <!-- Frame 1: Add / Edit Entry Modal -->
 <div class="modal-overlay" id="entryModal">
   <div class="modal-header">
-    <button type="button" class="btn-close" onclick="closeModal()" aria-label="סגירה">✕</button>
     <h2 id="modalTitle">אירוע חדש</h2>
-    <button type="button" class="btn-delete" id="deleteEntryBtn" onclick="deleteCurrentEntry()" style="display:none;">מחיקה</button>
+    <div style="display:flex; align-items:center; gap:8px;">
+      <button type="button" class="btn-delete" id="deleteEntryBtn" onclick="deleteCurrentEntry()" style="display:none;">מחיקה</button>
+      <button type="button" class="btn-close" onclick="closeModal()" aria-label="סגירה" style="padding:6px 4px;">✕</button>
+    </div>
   </div>
 
   <form class="modal-body" id="entryForm" onsubmit="saveForm(event)">
