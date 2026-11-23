@@ -65,29 +65,31 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 12px 20px;
+      padding: 12px 16px;
       background: var(--surface);
       border-bottom: 1px solid var(--border);
       flex-shrink: 0;
-      gap: 8px;
+      gap: 6px;
     }
 
     .brand-title {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
+      min-width: 0;
     }
 
     .brand-title img {
-      width: 30px;
-      height: 30px;
+      width: 28px;
+      height: 28px;
       border-radius: 8px;
       object-fit: cover;
+      flex-shrink: 0;
     }
 
     header h1 {
       margin: 0;
-      font-size: 1.25rem;
+      font-size: 1.2rem;
       font-weight: 800;
       letter-spacing: -0.3px;
       background: var(--primary-gradient);
@@ -99,10 +101,11 @@
     .header-actions {
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding-left: 4px;
+      gap: 6px;
+      padding-left: 2px;
+      flex-shrink: 0;
     }
-    
+
     .icon-btn {
       background: var(--surface-alt);
       border: 1px solid var(--border);
@@ -119,10 +122,11 @@
       white-space: nowrap;
       min-height: 34px;
     }
+
     #backupMenuBtn {
-      min-width: 40px;
-      font-size: 1.1rem;
-      padding: 7px 12px;
+      min-width: 36px;
+      font-size: 1.05rem;
+      padding: 6px 10px;
     }
 
     .icon-btn.active {
@@ -732,9 +736,9 @@
 <!-- Frame 1: Add / Edit Entry Modal -->
 <div class="modal-overlay" id="entryModal">
   <div class="modal-header">
-    <button type="button" class="btn-close" onclick="closeModal()" aria-label="סגור">✕</button>
+    <button type="button" class="btn-close" onclick="closeModal()" aria-label="סגירה">✕</button>
     <h2 id="modalTitle">אירוע חדש</h2>
-    <button type="button" class="btn-delete" id="deleteEntryBtn" onclick="deleteCurrentEntry()" style="display:none;">מחק</button>
+    <button type="button" class="btn-delete" id="deleteEntryBtn" onclick="deleteCurrentEntry()" style="display:none;">מחיקה</button>
   </div>
 
   <form class="modal-body" id="entryForm" onsubmit="saveForm(event)">
@@ -808,7 +812,7 @@
   </form>
 
   <div class="modal-footer">
-    <button type="submit" form="entryForm" class="btn-save">שמור אירוע</button>
+    <button type="submit" form="entryForm" class="btn-save">שמירת אירוע</button>
   </div>
 </div>
 
@@ -816,11 +820,12 @@
 <div class="dialog-backdrop" id="backupDialog">
   <div class="dialog-card">
     <h3>גיבוי ושחזור נתונים</h3>
-    <p>כל הרשומות נשמרות באופן פרטי על המכשיר שלך בלבד. ייבוא מקובץ (JSON או CSV) ממזג רק רשומות חדשות ומונע כפילויות.</p>
-    <button type="button" class="dialog-btn" onclick="downloadJSON()">💾 הורד קובץ גיבוי (JSON)</button>
-    <button type="button" class="dialog-btn" onclick="document.getElementById('restoreFileInput').click()">📂 ייבא / מזג מקובץ (JSON / CSV)</button>
+    <p>כל הרשומות נשמרות באופן פרטי על המכשיר שלכם בלבד. ייבוא מקובץ (JSON או CSV) ממזג רק רשומות חדשות ומונע כפילויות.</p>
+    <button type="button" class="dialog-btn" onclick="downloadJSON()">💾 הורידו קובץ גיבוי (JSON)</button>
+    <button type="button" class="dialog-btn" onclick="document.getElementById('restoreFileInput').click()">📂 יבאו / מזגו מקובץ (JSON / CSV)</button>
+    <button type="button" class="dialog-btn" onclick="forceAppUpdate()">🔄 בדקו עדכון גרסה (רענון)</button>
     <input type="file" id="restoreFileInput" accept=".json,.csv,text/csv,application/json,text/plain,*/*" style="display:none;" onchange="restoreBackupFile(event)" />
-    <button type="button" class="dialog-btn" onclick="closeBackupDialog()" style="background:transparent;">סגור</button>
+    <button type="button" class="dialog-btn" onclick="closeBackupDialog()" style="background:transparent;">סגירה</button>
   </div>
 </div>
 
@@ -1093,7 +1098,7 @@
     const btn = document.getElementById('toggleColsBtn');
     const expanded = wrapper.classList.toggle('scrollable-x');
     btn.classList.toggle('active', expanded);
-    btn.textContent = expanded ? '⤡ צמצם עמודות' : '⤢ כל העמודות';
+    btn.textContent = expanded ? '⤡ צמצמו עמודות' : '⤢ כל העמודות';
   }
 
   function handleSearch(val) {
@@ -1168,6 +1173,18 @@
 
   function closeBackupDialog() {
     document.getElementById('backupDialog').classList.remove('open');
+  }
+
+  async function forceAppUpdate() {
+    try {
+      if ('caches' in window) {
+        const keys = await caches.keys();
+        await Promise.all(keys.map(k => caches.delete(k)));
+      }
+      await fetch('./index.html?t=' + Date.now(), { cache: 'reload' });
+    } catch (e) {}
+    const baseUrl = window.location.origin + window.location.pathname;
+    window.location.replace(baseUrl + '?refresh=' + Date.now());
   }
 
   function downloadJSON() {
