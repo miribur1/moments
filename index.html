@@ -931,7 +931,7 @@
     </table>
     <div id="emptyState" class="empty-state" style="display:none;">
       <div style="font-size: 2.2rem;">🌿</div>
-      <p>עדיין אין רגעים רשומים.<br>לחצו על כפתור ה־<strong>+</strong> למטה כדי לתעד רגע ראשון מהיום.</p>
+      <p>עדיין אין אירועים רשומים.<br>לחצו על כפתור ה־<strong>+</strong> למטה כדי לתעד אירוע ראשון מהיום.</p>
     </div>
   </div>
 
@@ -1035,7 +1035,7 @@
 
   <div class="settings-scroll">
     <h2 class="settings-heading">הגדרות</h2>
-    <p class="settings-privacy-note">הרגעים שלכם נשמרים באופן פרטי במכשיר בלבד.</p>
+    <p class="settings-privacy-note">האירועים שלכם נשמרים באופן פרטי במכשיר בלבד.</p>
 
     <div class="settings-block">
       <div class="settings-block-title">גיבוי</div>
@@ -1050,7 +1050,7 @@
         </span>
         <span class="settings-row-content">
           <span class="settings-row-title">שמירת גיבוי למכשיר</span>
-          <span class="settings-row-sub">שמירת הרגעים בקובץ מקומי</span>
+          <span class="settings-row-sub">שמירת האירועים בקובץ מקומי</span>
         </span>
       </button>
 
@@ -1083,8 +1083,8 @@
           </svg>
         </span>
         <span class="settings-row-content">
-          <span class="settings-row-title">טעינת רגעים מקובץ גיבוי</span>
-          <span class="settings-row-sub">הרגעים יתווספו ללא יצירת כפילויות</span>
+          <span class="settings-row-title">טעינת אירועים מקובץ גיבוי</span>
+          <span class="settings-row-sub">האירועים יתווספו ללא יצירת כפילויות</span>
         </span>
       </button>
       <input type="file" id="restoreFileInput" accept=".csv,text/csv,text/plain,*/*" style="display:none;" onchange="restoreBackupFile(event)" />
@@ -1210,7 +1210,7 @@
     const timeOrCountTrigger = meta.lastBackupAt && (daysSinceBackup >= 7 || unsaved >= 10);
 
     if (neverBackedUpTrigger || timeOrCountTrigger) {
-      const label = unsaved === 1 ? 'רגע אחד חדש שלא גובה' : `${unsaved} רגעים חדשים שלא גובו`;
+      const label = unsaved === 1 ? 'אירוע אחד חדש שלא גובה' : `${unsaved} אירועים חדשים שלא גובו`;
       textEl.textContent = `יש לכם ${label} — שמרו עותק בדרייב או בוואטסאפ.`;
       banner.classList.add('visible');
     } else {
