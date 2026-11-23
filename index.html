@@ -65,7 +65,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 12px 16px;
+      padding: 12px 20px;
       background: var(--surface);
       border-bottom: 1px solid var(--border);
       flex-shrink: 0;
@@ -99,7 +99,8 @@
     .header-actions {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
+      padding-left: 4px;
     }
 
     .icon-btn {
@@ -107,14 +108,22 @@
       border: 1px solid var(--border);
       color: var(--text);
       border-radius: 9px;
-      padding: 6px 10px;
+      padding: 7px 11px;
       font-size: 0.85rem;
       font-weight: 600;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 4px;
       white-space: nowrap;
+      min-height: 36px;
+    }
+
+    #backupMenuBtn {
+      min-width: 40px;
+      font-size: 1.1rem;
+      padding: 7px 12px;
     }
 
     .icon-btn.active {
@@ -124,7 +133,7 @@
     }
 
     .controls-bar {
-      padding: 10px 16px;
+      padding: 10px 18px;
       background: var(--surface);
       border-bottom: 1px solid var(--border);
       display: flex;
@@ -227,7 +236,7 @@
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
-        padding: 8px 16px;
+        padding: 8px 18px;
       }
       .search-box {
         max-width: 260px;
@@ -239,7 +248,7 @@
       overflow-y: auto;
       overflow-x: hidden;
       position: relative;
-      padding-bottom: 90px;
+      padding-bottom: 100px;
     }
 
     .table-wrapper.scrollable-x {
@@ -262,7 +271,7 @@
     }
 
     th {
-      padding: 10px 12px;
+      padding: 10px 14px;
       font-weight: 700;
       font-size: 0.82rem;
       color: var(--text-muted);
@@ -270,7 +279,7 @@
     }
 
     td {
-      padding: 12px;
+      padding: 12px 14px;
       border-bottom: 1px solid var(--border);
       vertical-align: top;
       line-height: 1.4;
@@ -284,7 +293,6 @@
       background-color: var(--surface-alt);
     }
 
-    /* Emoji Mood Badge & Date Cell */
     .date-cell {
       white-space: nowrap;
       width: 138px;
@@ -387,11 +395,11 @@
       color: var(--text-muted);
     }
 
-    /* Floating Action Button */
+    /* Floating Action Button - shifted inward from screen edge */
     .fab {
       position: fixed;
-      bottom: 22px;
-      left: 22px;
+      bottom: 28px;
+      left: 28px;
       width: 60px;
       height: 60px;
       border-radius: 50%;
@@ -436,7 +444,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 12px 16px;
+      padding: 12px 18px;
       border-bottom: 1px solid var(--border);
       background: var(--surface);
       flex-shrink: 0;
@@ -453,7 +461,7 @@
       font-size: 1.4rem;
       color: var(--text-muted);
       cursor: pointer;
-      padding: 4px 10px;
+      padding: 6px 12px;
     }
 
     .btn-delete {
@@ -669,7 +677,7 @@
     <div class="header-actions">
       <button type="button" id="toggleColsBtn" class="icon-btn hide-on-wide" onclick="toggleColumns()">⤢ כל העמודות</button>
       <button type="button" id="exportCsvBtn" class="icon-btn" onclick="exportCSV()">📤 אקסל</button>
-      <button type="button" id="backupMenuBtn" class="icon-btn" onclick="openBackupDialog()">⋮</button>
+      <button type="button" id="backupMenuBtn" class="icon-btn" onclick="openBackupDialog()" aria-label="תפריט גיבוי">⋮</button>
     </div>
   </header>
 
@@ -809,9 +817,9 @@
 <div class="dialog-backdrop" id="backupDialog">
   <div class="dialog-card">
     <h3>גיבוי ושחזור נתונים</h3>
-    <p>כל הרשומות נשמרות באופן פרטי על המכשיר שלך בלבד. ניתן לשחזר מקובץ גיבוי (JSON) או מקובץ אקסל (CSV) שיוצא מהאפליקציה.</p>
+    <p>כל הרשומות נשמרות באופן פרטי על המכשיר שלך בלבד. ייבוא מקובץ (JSON או CSV) ממזג רק רשומות חדשות ומונע כפילויות.</p>
     <button type="button" class="dialog-btn" onclick="downloadJSON()">💾 הורד קובץ גיבוי (JSON)</button>
-    <button type="button" class="dialog-btn" onclick="document.getElementById('restoreFileInput').click()">📂 שחזר מקובץ (JSON / CSV)</button>
+    <button type="button" class="dialog-btn" onclick="document.getElementById('restoreFileInput').click()">📂 ייבא / מזג מקובץ (JSON / CSV)</button>
     <input type="file" id="restoreFileInput" accept=".json,.csv,text/csv,application/json,text/plain,*/*" style="display:none;" onchange="restoreBackupFile(event)" />
     <button type="button" class="dialog-btn" onclick="closeBackupDialog()" style="background:transparent;">סגור</button>
   </div>
@@ -860,15 +868,32 @@
     return `${dayName}, ${d}.${m}`;
   }
 
+  function getLocalISODate(dateObj = new Date()) {
+    const offset = dateObj.getTimezoneOffset() * 60000;
+    return new Date(dateObj - offset).toISOString().slice(0, 10);
+  }
+
   function getTodayISO() {
-    const now = new Date();
-    const offset = now.getTimezoneOffset() * 60000;
-    return new Date(now - offset).toISOString().slice(0, 10);
+    return getLocalISODate(new Date());
   }
 
   function getNowTime() {
     const now = new Date();
     return now.toTimeString().slice(0, 5);
+  }
+
+  function normalizeDateInput(rawDate) {
+    const s = (rawDate || '').trim();
+    if (!s) return '';
+    if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+    const dmy = s.match(/^(\d{1,2})[./-](\d{1,2})[./-](\d{2,4})$/);
+    if (dmy) {
+      const day = dmy[1].padStart(2, '0');
+      const month = dmy[2].padStart(2, '0');
+      const year = dmy[3].length === 2 ? `20${dmy[3]}` : dmy[3];
+      return `${year}-${month}-${day}`;
+    }
+    return '';
   }
 
   function escapeHtml(str) {
@@ -885,7 +910,7 @@
     const todayStr = getTodayISO();
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-    const weekStr = sevenDaysAgo.toISOString().slice(0, 10);
+    const weekStr = getLocalISODate(sevenDaysAgo);
 
     const q = searchQuery.trim().toLowerCase();
 
@@ -1114,7 +1139,7 @@
       return;
     }
     const headers = ['תאריך', 'יום', 'שעה', 'סוג', 'אירוע', 'תחושות', 'מחשבות', 'מצבי רוח ורגשות', 'מחשבות בזמן כתיבה בטבלה'];
-    const sorted = [...entries].sort((a, b) => `${b.date}T${b.time}`.localeCompare(`${a.date}T${a.time}`));
+    const sorted = [...entries].sort((a, b) => `${b.date}T${b.time || '00:00'}`.localeCompare(`${a.date}T${a.time || '00:00'}`));
 
     const rows = sorted.map(item => [
       item.date,
@@ -1128,8 +1153,7 @@
       item.metaThoughts
     ].map(val => `"${String(val || '').replace(/"/g, '""')}"`).join(','));
 
-    const csvContent = '﻿' + [headers.join(','), ...rows].join('
-');
+    const csvContent = '\uFEFF' + [headers.join(','), ...rows].join('\n');
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -1186,25 +1210,67 @@
     return result;
   }
 
+  function getEntryFingerprint(item) {
+    const date = normalizeDateInput(item.date);
+    const time = (item.time || '').trim();
+    const event = (item.event || '').trim().replace(/\s+/g, ' ');
+    return `${date}|${time}|${event}`;
+  }
+
+  function mergeImportedEntries(imported) {
+    const existingFingerprints = new Set(entries.map(getEntryFingerprint));
+    let addedCount = 0;
+    let skippedCount = 0;
+
+    imported.forEach((item, idx) => {
+      const normalizedDate = normalizeDateInput(item.date);
+      const normalized = {
+        id: item.id ? String(item.id) : `${Date.now()}_${idx}`,
+        type: item.type === 'negative' ? 'negative' : 'positive',
+        date: normalizedDate,
+        time: (item.time || '12:00').trim(),
+        event: (item.event || '').trim(),
+        sensations: (item.sensations || '').trim(),
+        thoughts: (item.thoughts || '').trim(),
+        emotions: (item.emotions || '').trim(),
+        metaThoughts: (item.metaThoughts || '').trim()
+      };
+
+      if (!normalized.date || !normalized.event) return;
+
+      const fp = getEntryFingerprint(normalized);
+      if (existingFingerprints.has(fp)) {
+        skippedCount++;
+      } else {
+        existingFingerprints.add(fp);
+        entries.push(normalized);
+        addedCount++;
+      }
+    });
+
+    return { addedCount, skippedCount };
+  }
+
   function restoreBackupFile(e) {
     const file = e.target.files[0];
     if (!file) return;
     const reader = new FileReader();
     reader.onload = ev => {
       try {
-        const text = ev.target.result.replace(/^﻿/, '').trim();
+        const text = ev.target.result.replace(/^\uFEFF/, '').trim();
+        let imported = [];
+
         if (file.name.toLowerCase().endsWith('.csv') || (!text.startsWith('[') && !text.startsWith('{'))) {
-          const lines = text.split(/?
-/).filter(l => l.trim());
+          const lines = text.split(/\r?\n/).filter(l => l.trim());
           if (lines.length < 2) {
             alert('קובץ ה-CSV ריק או לא תקין.');
             return;
           }
-          const imported = lines.slice(1).map((line, idx) => {
+          imported = lines.slice(1).map((line, idx) => {
             const cols = parseCSVLine(line);
             return {
-              id: (Date.now() + idx).toString(),
-              date: (cols[0] || '').trim(),
+              id: `${Date.now()}_${idx}`,
+              date: normalizeDateInput(cols[0]),
               time: (cols[2] || '12:00').trim(),
               type: (cols[3] || '').includes('שלילי') ? 'negative' : 'positive',
               event: (cols[4] || '').trim(),
@@ -1219,19 +1285,26 @@
             alert('לא נמצאו רשומות תקינות בקובץ ה-CSV.');
             return;
           }
-          entries = imported;
         } else {
-          const imported = JSON.parse(text);
+          imported = JSON.parse(text);
           if (!Array.isArray(imported)) {
             alert('קובץ הגיבוי אינו תקין.');
             return;
           }
-          entries = imported;
         }
+
+        const { addedCount, skippedCount } = mergeImportedEntries(imported);
         saveEntries();
         renderTable();
         closeBackupDialog();
-        alert(`שוחזרו בהצלחה ${entries.length} רשומות!`);
+
+        if (addedCount > 0 && skippedCount > 0) {
+          alert(`מוזגו בהצלחה ${addedCount} רשומות חדשות (דולגו ${skippedCount} כפילויות שכבר קיימות).`);
+        } else if (addedCount > 0) {
+          alert(`נוספו בהצלחה ${addedCount} רשומות חדשות!`);
+        } else {
+          alert('כל הרשומות שבקובץ כבר קיימות ביומן (לא נוספו כפילויות).');
+        }
       } catch (err) {
         alert('שגיאה בקריאת הקובץ.');
       }
