@@ -136,7 +136,7 @@
     .icon-btn {
       background: var(--surface-alt);
       border: 1px solid var(--border);
-      color: var(--text);
+      color: var(--text-muted);
       border-radius: 9px;
       padding: 5px 7px;
       font-size: 0.75rem;
@@ -256,7 +256,7 @@
       font-size: 0.82rem;
       font-weight: 600;
       font-family: inherit;
-      color: var(--text);
+      color: var(--text-muted);
       cursor: pointer;
       display: inline-flex;
       align-items: center;
@@ -266,7 +266,7 @@
 
     .filter-pill.active {
       background: var(--surface);
-      color: var(--text);
+      color: var(--text-muted);
       box-shadow: 0 1px 3px rgba(0,0,0,0.08);
     }
 
@@ -296,7 +296,7 @@
       font-weight: 600;
       font-family: inherit;
       background: var(--surface);
-      color: var(--text);
+      color: var(--text-muted);
     }
 
     @media (orientation: landscape) and (min-width: 640px) {
@@ -590,7 +590,7 @@
       margin: 0;
       font-size: 1.1rem;
       font-weight: 600;
-      color: var(--text);
+      color: var(--text-muted);
     }
 
     .btn-close {
@@ -634,7 +634,7 @@
     .form-group label {
       font-size: 0.88rem;
       font-weight: 600;
-      color: var(--text);
+      color: var(--text-muted);
     }
 
     .form-row {
@@ -817,7 +817,7 @@
       text-align: right;
       font-size: 1.35rem;
       font-weight: 600;
-      color: #1e293b;
+      color: var(--text-muted);
       letter-spacing: -0.2px;
     }
 
@@ -845,7 +845,7 @@
     .settings-block-title {
       font-size: 0.95rem;
       font-weight: 600;
-      color: #1e293b;
+      color: var(--text-muted);
       line-height: 1.3;
       margin-bottom: 8px;
       text-align: right;
@@ -965,8 +965,24 @@
           <option value="custom">תאריך מסוים...</option>
         </select>
         <input type="date" id="customDateInput" class="filter-date" style="display:none;" onchange="handleCustomDate(this.value)" />
-        <button type="button" id="toggleColsBtn" class="icon-btn hide-on-wide" onclick="toggleColumns()">⤢ כל העמודות</button>
-        <button type="button" id="sortOrderBtn" class="icon-btn" onclick="toggleSort()">⇅ חדש לישן</button>
+        <button type="button" id="toggleColsBtn" class="icon-btn hide-on-wide" onclick="toggleColumns()">
+          <svg id="toggleColsIcon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="15 3 21 3 21 9"/>
+            <polyline points="9 21 3 21 3 15"/>
+            <line x1="21" y1="3" x2="14" y2="10"/>
+            <line x1="3" y1="21" x2="10" y2="14"/>
+          </svg>
+          <span id="toggleColsText">כל העמודות</span>
+        </button>
+        <button type="button" id="sortOrderBtn" class="icon-btn" onclick="toggleSort()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M7 4v16"/>
+            <path d="M3 8l4-4 4 4"/>
+            <path d="M17 20V4"/>
+            <path d="M13 16l4 4 4-4"/>
+          </svg>
+          <span id="sortOrderText">חדש לישן</span>
+        </button>
       </div>
     </div>
   </div>
@@ -1201,7 +1217,7 @@
         </span>
         <span class="settings-row-content">
           <span class="settings-row-title">Moments</span>
-          <span class="settings-row-sub" id="appVersionLabel">גרסה 1.2.17</span>
+          <span class="settings-row-sub" id="appVersionLabel">גרסה 1.2.11</span>
         </span>
       </div>
 
@@ -1240,7 +1256,7 @@
 </div>
 
 <script>
-  const APP_VERSION = '1.2.17';
+  const APP_VERSION = '1.2.11';
   const STORAGE_KEY = 'mindfulness_journal_entries_v1';
   const BACKUP_META_KEY = 'mindfulness_journal_backup_meta_v1';
   const HEBREW_DAYS = ['יום א׳', 'יום ב׳', 'יום ג׳', 'יום ד׳', 'יום ה׳', 'יום ו׳', 'שבת'];
@@ -1592,9 +1608,16 @@
   function toggleColumns() {
     const wrapper = document.getElementById('tableWrapper');
     const btn = document.getElementById('toggleColsBtn');
+    const icon = document.getElementById('toggleColsIcon');
+    const label = document.getElementById('toggleColsText');
     const expanded = wrapper.classList.toggle('scrollable-x');
     btn.classList.toggle('active', expanded);
-    btn.textContent = expanded ? '⤡ צמצמו עמודות' : '⤢ כל העמודות';
+    if (label) label.textContent = expanded ? 'צמצמו עמודות' : 'כל העמודות';
+    if (icon) {
+      icon.innerHTML = expanded
+        ? '<polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="14" y1="10" x2="21" y2="3"/><line x1="3" y1="21" x2="10" y2="14"/>'
+        : '<polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/>';
+    }
   }
 
   function handleSearch(val) {
@@ -1640,7 +1663,8 @@
 
   function toggleSort() {
     sortDesc = !sortDesc;
-    document.getElementById('sortOrderBtn').textContent = sortDesc ? '⇅ חדש לישן' : '⇅ ישן לחדש';
+    const label = document.getElementById('sortOrderText');
+    if (label) label.textContent = sortDesc ? 'חדש לישן' : 'ישן לחדש';
     renderTable();
   }
 
