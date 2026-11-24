@@ -962,8 +962,8 @@
     <div class="filter-row">
       <div class="pill-group" id="typeFilterGroup">
         <button type="button" class="filter-pill active" data-type="all" onclick="setFilterType('all', this)">הכל</button>
-        <button type="button" class="filter-pill" data-type="positive" onclick="setFilterType('positive', this)">😌 חיובי</button>
-        <button type="button" class="filter-pill" data-type="negative" onclick="setFilterType('negative', this)">😣 שלילי</button>
+        <button type="button" class="filter-pill" data-type="positive" onclick="setFilterType('positive', this)">😌 נעים</button>
+        <button type="button" class="filter-pill" data-type="negative" onclick="setFilterType('negative', this)">😣 לא נעים</button>
       </div>
 
       <div class="sort-date-group">
@@ -1060,10 +1060,10 @@
       <label>סוג אירוע</label>
       <div class="type-selector">
         <button type="button" class="type-btn selected" data-val="positive" onclick="setTypeButtons('positive')">
-          <span class="btn-emoji">😌</span> חיובי
+          <span class="btn-emoji">😌</span> נעים
         </button>
         <button type="button" class="type-btn" data-val="negative" onclick="setTypeButtons('negative')">
-          <span class="btn-emoji">😣</span> שלילי
+          <span class="btn-emoji">😣</span> לא נעים
         </button>
       </div>
     </div>
@@ -1226,7 +1226,7 @@
         </span>
         <span class="settings-row-content">
           <span class="settings-row-title" style="color: var(--text-muted);">Moments</span>
-          <span class="settings-row-sub" id="appVersionLabel">גרסה 1.2.19</span>
+          <span class="settings-row-sub" id="appVersionLabel">גרסה 1.2.11</span>
         </span>
       </div>
 
@@ -1265,7 +1265,7 @@
 </div>
 
 <script>
-  const APP_VERSION = '1.2.19';
+  const APP_VERSION = '1.2.11';
   const STORAGE_KEY = 'mindfulness_journal_entries_v1';
   const BACKUP_META_KEY = 'mindfulness_journal_backup_meta_v1';
   const HEBREW_DAYS = ['יום א׳', 'יום ב׳', 'יום ג׳', 'יום ד׳', 'יום ה׳', 'יום ו׳', 'שבת'];
@@ -1685,7 +1685,7 @@
       item.date,
       getHebrewDayName(item.date),
       item.time || '',
-      item.type === 'positive' ? 'חיובי' : 'שלילי',
+      item.type === 'positive' ? 'נעים' : 'לא נעים',
       item.event,
       item.sensations,
       item.thoughts,
@@ -1892,7 +1892,7 @@
             id: `${Date.now()}_${idx}`,
             date: normalizeDateInput(cols[0]),
             time: (cols[2] || '12:00').trim(),
-            type: (cols[3] || '').includes('שלילי') ? 'negative' : 'positive',
+            type: ((cols[3] || '').includes('לא נעים') || (cols[3] || '').includes('שלילי')) ? 'negative' : 'positive',
             event: (cols[4] || '').trim(),
             sensations: (cols[5] || '').trim(),
             thoughts: (cols[6] || '').trim(),
