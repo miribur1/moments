@@ -299,6 +299,15 @@
       color: var(--text-muted);
     }
 
+    select.filter-select:focus,
+    input.filter-date:focus,
+    .icon-btn:focus,
+    .filter-pill:focus {
+      outline: none;
+      border-color: var(--text-muted);
+      box-shadow: 0 0 0 1px var(--text-muted);
+    }
+
     @media (orientation: landscape) and (min-width: 640px) {
       .controls-bar {
         flex-direction: row;
@@ -1216,8 +1225,8 @@
           </svg>
         </span>
         <span class="settings-row-content">
-          <span class="settings-row-title">Moments</span>
-          <span class="settings-row-sub" id="appVersionLabel">גרסה 1.2.18</span>
+          <span class="settings-row-title" style="color: var(--text-muted);">Moments</span>
+          <span class="settings-row-sub" id="appVersionLabel">גרסה 1.2.11</span>
         </span>
       </div>
 
@@ -1256,7 +1265,7 @@
 </div>
 
 <script>
-  const APP_VERSION = '1.2.18';
+  const APP_VERSION = '1.2.11';
   const STORAGE_KEY = 'mindfulness_journal_entries_v1';
   const BACKUP_META_KEY = 'mindfulness_journal_backup_meta_v1';
   const HEBREW_DAYS = ['יום א׳', 'יום ב׳', 'יום ג׳', 'יום ד׳', 'יום ה׳', 'יום ו׳', 'שבת'];
